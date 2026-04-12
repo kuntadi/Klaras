@@ -1,0 +1,17 @@
+{
+  "name": "Job Dalang App",
+  "short_name": "JobDalang",
+  "description": "Aplikasi Manajemen Jadwal Manggung",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d9488",
+  "icons": [
+    {
+      "src": "https://yt3.googleusercontent.com/sTjuOwpf8A4vmiOS0Xt9hvpL424VfF2sv11lssGJ0io24eNp6OQUC4YflEbwjiR4b4wcUwOY5A=s160-c-k-c0x00ffffff-no-rj",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
