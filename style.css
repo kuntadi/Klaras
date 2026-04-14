@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+body { 
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc; /* Slate 50 */
+  color: #1e293b; /* Slate 800 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em; /* Ciri khas desain modern nganggo Inter */
+}
+
+/* Optimasi kanggo scrollbar supaya tetep cantik neng browser */
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #e2e8f0; /* Slate 200 */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1; /* Slate 300 */
+}
+
+/* Efek smooth transition kanggo ganti-ganti halaman */
+.page-section {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Kanggo input supaya font-e ora kaku */
+input, select, textarea, button {
+  font-family: 'Inter', sans-serif;
+}
+@media print { .no-print { display: none; } }
