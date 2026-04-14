@@ -12,47 +12,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-body { 
-  font-family: 'Inter', sans-serif;
-  background-color: #f8fafc; /* Slate 50 */
-  color: #1e293b; /* Slate 800 */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em; /* Ciri khas desain modern nganggo Inter */
-}
-
-/* Optimasi kanggo scrollbar supaya tetep cantik neng browser */
-.custom-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb {
-  background: #e2e8f0; /* Slate 200 */
-  border-radius: 10px;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1; /* Slate 300 */
-}
-
-/* Efek smooth transition kanggo ganti-ganti halaman */
-.page-section {
-  transition: all 0.3s ease-in-out;
-}
-
-/* Kanggo input supaya font-e ora kaku */
-input, select, textarea, button {
-  font-family: 'Inter', sans-serif;
-}
-@media print { .no-print { display: none; } }
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100">
 
@@ -93,9 +53,10 @@ input, select, textarea, button {
 
     </div>
   </div>
+ 
 </header>
 
-<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-slate-900/90 backdrop-blur-xl border border-white/10 flex justify-around items-center py-3 px-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)] no-print z-50 rounded-[28px]">
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-slate-900/90 backdrop-blur-xl border border-white/10 flex justify-around items-center py-3 px-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)] no-print z-50 rounded-[28px]">
   
   <button onclick="showPage('dashboard')" class="relative flex flex-col items-center group transition-all duration-300">
     <div class="p-2 rounded-2xl text-emerald-400 bg-emerald-400/10 mb-1 group-active:scale-90 transition-transform">
@@ -135,7 +96,9 @@ input, select, textarea, button {
   </button>
 
 </nav>
-
+<button id="btnSuara" onclick="toggleSuara()" class="fixed bottom-20 right-4 bg-slate-800 text-white w-12 h-12 rounded-full shadow-lg text-xl active:scale-90 transition-all z-50">
+ 🔊
+ </button>
 <main class="p-4 space-y-6 bg-slate-50 min-h-screen">
   
   <section id="dashboard" class="page-section pb-24">
@@ -232,7 +195,7 @@ input, select, textarea, button {
         <div class="grid gap-3 mt-4">
           <input id="namaDalang" placeholder="Nama Dalang" class="w-full p-3 bg-slate-50 rounded-xl border-none outline-none focus:ring-2 focus:ring-emerald-500">
           <input id="namaGroup" placeholder="Nama Group" class="w-full p-3 bg-slate-50 rounded-xl border-none outline-none focus:ring-2 focus:ring-emerald-500">
-          <input id="alamat" placeholder="Alamat Lengkap" class="w-full p-3 bg-slate-50 rounded-xl border-none outline-none focus:ring-2 focus:ring-emerald-500">
+          <textarea id="alamat" placeholder="Alamat Lengkap" class="w-full p-3 bg-slate-50 rounded-xl border-none outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
           <input id="noHp" placeholder="Nomor HP / WA" class="w-full p-3 bg-slate-50 rounded-xl border-none outline-none focus:ring-2 focus:ring-emerald-500">
           <input id="logo" placeholder="URL Logo (ImgBB/Liyane)" class="w-full p-3 bg-slate-50 rounded-xl border-none outline-none focus:ring-2 focus:ring-emerald-500">
           <button onclick="simpanSetting()" class="bg-slate-800 text-white p-3.5 rounded-xl font-bold hover:bg-black transition-colors">Simpan Perubahan</button>
@@ -322,36 +285,36 @@ function simpanSetting() {
 }
 
 function tambahJob() {
-  const n = document.getElementById('nama'), a = document.getElementById('acara'), lk = document.getElementById('lakon');
-  const t = document.getElementById('tanggal'), h = document.getElementById('harga'), d = document.getElementById('dp'), l = document.getElementById('lokasi');
+  const n = document.getElementById('nama'), 
+        a = document.getElementById('acara'), 
+        lk = document.getElementById('lakon'),
+        t = document.getElementById('tanggal'), 
+        h = document.getElementById('harga'), 
+        d = document.getElementById('dp'), 
+        l = document.getElementById('lokasi'),
+        ps = document.getElementById('paketSelect');
 
   if(!n.value || !t.value) return msg("Nama lan Tanggal kudu diisi!", "error");
-
-  // --- PASANG NENG KENE ---
-  const hargaVal = h.value.replace(/\D/g, ''); // Ngresiki karakter dudu angka
-  const dpVal = d.value.replace(/\D/g, '');
-  const totalHarga = parseInt(hargaVal) || 0;
-  const totalDp = parseInt(dpVal) || 0;
-  const sisaTagihan = totalHarga - totalDp;
-  // -----------------------
 
   const newJob = {
     id: Date.now(),
     nama: n.value,
-    acara: a.value,
+    acara: a.value, // Isine Sunatan / Mantu (ketikanmu)
+    paket_nama: ps.options[ps.selectedIndex].text, // Jeneng Pakete
+    paket_isi: ps.value, // Rincian Isine Paket (Wayang, Sound, lsp)
     lakon: lk.value,
     tanggal: t.value,
-    harga: totalHarga, // nganggo variabel anyar
-    dp: totalDp,       // nganggo variabel anyar
-    sisa: sisaTagihan, // nganggo hasil pengurangan
+    harga: parseInt(h.value) || 0,
+    dp: parseInt(d.value) || 0,
+    sisa: (parseInt(h.value) || 0) - (parseInt(d.value) || 0),
     lokasi: l.value
   };
 
   jobs.push(newJob);
   localStorage.setItem('jobs', JSON.stringify(jobs));
   
-  // Reset form
-  n.value = ''; a.value = ''; lk.value = ''; t.value = ''; h.value = ''; d.value = ''; l.value = '';
+  [n, a, lk, t, h, d, l].forEach(i => i.value = '');
+  ps.selectedIndex = 0;
   
   msg("Job Berhasil Disimpan!");
   render();
@@ -455,6 +418,7 @@ function renderJadwal() {
             <div class="text-[10px] text-amber-600 font-extrabold flex items-center gap-1">
               <span class="opacity-70">🎭</span> ${j.lakon || '-'}
             </div>
+            
             <div class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
               <span class="opacity-70">📍</span> ${j.acara}
             </div>
@@ -471,24 +435,20 @@ function renderJadwal() {
   }).join('');
 }
 function bukaDetailByJobId(id) {
-  // Nganggo '==' supaya nek ID-ne string tetep isa ketemu
-  const j = jobs.find(x => x.id == id); 
+  const j = jobs.find(x => x.id === id);
   if(!j) return;
-  
   const isi = document.getElementById('isiDetail');
-  
-  // Resikne sisa tagihan dhisik kanggo jaga-jaga
   const sisa = j.sisa !== undefined ? j.sisa : (j.harga - j.dp);
 
   isi.innerHTML = `
     <div>
-      <p class="text-xs text-gray-500 uppercase font-bold">Penanggap</p>
+      <p class="text-[10px] text-gray-500 uppercase font-bold">Penanggap</p>
       <p class="text-lg font-bold text-gray-800">${j.nama}</p>
     </div>
-    
+
     <div class="grid grid-cols-2 gap-4 border-t pt-3">
       <div>
-        <p class="text-[10px] text-gray-500 font-bold uppercase">Acara</p>
+        <p class="text-[10px] text-gray-500 font-bold uppercase text-teal-600">Acara</p>
         <p class="font-semibold text-sm">${j.acara || '-'}</p>
       </div>
       <div>
@@ -496,36 +456,41 @@ function bukaDetailByJobId(id) {
         <p class="font-semibold text-sm">${j.tanggal}</p>
       </div>
     </div>
-    
+    <div class="border-t pt-3 bg-teal-50 -mx-6 px-6 py-3">
+  <span class="opacity-70">📍</span> 
+  ${j.lokasi ? 
+    `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.lokasi)}" 
+        target="_blank" 
+        class="text-blue-500 hover:underline">
+        ${j.lokasi}
+     </a>` 
+    : '<span class="text-slate-300 italic">Lokasi durung diisi</span>'
+  }
+</div>
+    <div class="border-t pt-3 bg-teal-50 -mx-6 px-6 py-3">
+      <p class="text-[10px] text-teal-600 font-bold uppercase">Paket: ${j.paket_nama || '-'}</p>
+      <div class="text-[11px] text-gray-700 mt-1 italic leading-relaxed">
+        ${j.paket_isi ? j.paket_isi.replace(/\n/g, '<br>') : 'Ora ana rincian'}
+      </div>
+    </div>
+
     <div class="border-t pt-3">
-      <p class="text-[10px] text-gray-500 font-bold uppercase text-amber-600">Lakon Sing Digawa</p>
+      <p class="text-[10px] text-amber-600 font-bold uppercase">Lakon</p>
       <p class="text-sm font-bold text-gray-800">🎭 ${j.lakon || '-'}</p>
     </div>
-    
-    <div class="border-t pt-3">
-      <p class="text-[10px] text-gray-500 font-bold uppercase">Lokasi</p>
-      <p class="text-sm font-semibold text-teal-700">${j.lokasi || '-'}</p>
-      ${j.lokasi ? `
-        <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.lokasi)}', '_blank')" 
-                class="mt-2 text-[10px] bg-teal-50 text-teal-600 px-3 py-1 rounded-md font-bold">
-          CEK MAPS 📍
-        </button>` : ''}
-    </div>
-    
-    <div class="border-t pt-3 ${sisa <= 0 ? 'bg-emerald-50' : 'bg-red-50'} -mx-6 px-6 py-2">
-       <p class="text-[10px] ${sisa <= 0 ? 'text-emerald-500' : 'text-red-500'} font-bold uppercase">Sisa Tagihan</p>
-       <p class="text-lg font-bold ${sisa <= 0 ? 'text-emerald-600' : 'text-red-600'}">
+
+    <div class="border-t pt-3 ${sisa <= 0 ? 'bg-green-50' : 'bg-red-50'} -mx-6 px-6 py-2">
+       <p class="text-[10px] ${sisa <= 0 ? 'text-green-500' : 'text-red-500'} font-bold uppercase">Sisa Tagihan</p>
+       <p class="text-lg font-bold ${sisa <= 0 ? 'text-green-600' : 'text-red-600'}">
          ${sisa <= 0 ? 'LUNAS' : 'Rp ' + sisa.toLocaleString()}
        </p>
     </div>
-    
-    <div class="pt-2">
-      <button onclick="hapusJob(${j.id})" class="text-xs text-red-400 font-bold hover:text-red-600">
-        Hapus Data Iki
-      </button>
+
+    <div class="pt-4 flex gap-2">
+       <button onclick="hapusJob(${j.id})" class="flex-1 bg-gray-100 text-red-500 py-2 rounded-lg font-bold text-xs">Hapus</button>
+       <button onclick="cetakKwitansi(${jobs.indexOf(j)})" class="flex-[2] bg-teal-600 text-white py-2 rounded-lg font-bold text-xs shadow-lg">PRINT KWITANSI</button>
     </div>
   `;
-  
   document.getElementById('modalDetail').classList.remove('hidden');
   document.getElementById('modalDetail').classList.add('flex');
 }
@@ -588,15 +553,62 @@ function cetakKwitansi(index) {
       body { font-family: 'Inter', sans-serif; padding: 15px 40px; margin: 0; color: #1a202c; line-height: 1.3; }
       
       /* KOP SECTION */
-      .kop-container { display: flex; align-items: center; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 2px; }
-      .logo-box { width: 90px; }
-      .logo-img { width: 80px; height: 80px; object-fit: contain; }
-      .info-box { flex: 1; text-align: center; }
-      .info-box h1 { margin: 0; font-size: 26px; font-weight: 800; color: #000; text-transform: uppercase; }
-      .pimpinan { font-weight: 700; color: #0d9488; font-size: 14px; margin: 2px 0; }
-      .info-box p { margin: 0; font-size: 11px; color: #4a5568; }
-      .double-line { border-top: 1px solid #000; margin-top: 2px; margin-bottom: 15px; }
-
+  .kop-container { 
+  display: flex; 
+  align-items: flex-start; /* BEN RA PENCENG */
+  border-bottom: 3px solid #000; 
+  padding-bottom: 10px; 
+  margin-bottom: 2px; 
+  position: relative;
+  }
+  .logo-box { 
+  width: 90px; 
+  padding-top: 3px; /* BEN SEJAJAR KARO JUDUL */
+  flex-shrink: 0;
+  }
+  .logo-img { 
+  width: 80px; 
+  height: 80px; 
+  object-fit: contain; 
+  }
+  .info-box { 
+  flex: 1; 
+  text-align: center; 
+  padding: 0 10px;
+  }
+  .info-box h1 { 
+  margin: 0; 
+  font-size: 26px; 
+  font-weight: 800; 
+  color: #000; 
+  text-transform: uppercase; 
+  line-height: 1.1;
+  }
+  .pimpinan { 
+  font-weight: 700; 
+  color: #0d9488; 
+  font-size: 14px; 
+  margin: 3px 0; 
+  }
+  .info-box p { 
+  margin: 2px 0; 
+  font-size: 11px; 
+  color: #4a5568; 
+  }
+  
+  /* ALAMAT MAKS 2 BARIS */
+  .alamat-kop {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Ganti 1 nek pengen 1 baris */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  max-width: 95%;
+  word-break: break-word; /* BEN ISO MOTONG KATA PANJANG */
+  }
+   
+   .double-line { border-top: 1px solid #000; margin-top: 2px; margin-bottom: 15px; }
       /* HEADER DOCUMENT */
       .doc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
       .doc-title { font-size: 18px; font-weight: 800; color: #000; letter-spacing: 1px; }
@@ -626,7 +638,30 @@ function cetakKwitansi(index) {
       .sig-space { height: 60px; }
       .sig-name { font-weight: 800; text-decoration: underline; text-transform: uppercase; font-size: 13px; }
 
-      .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); font-size: 100px; font-weight: 900; color: rgba(13, 148, 136, 0.07); pointer-events: none; text-transform: uppercase; border: 12px solid rgba(13, 148, 136, 0.07); padding: 10px 40px; border-radius: 20px; z-index: -1; }
+.watermark {
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%) rotate(-20deg); 
+  font-size: 100px; 
+  font-weight: 900; 
+  pointer-events: none; 
+  text-transform: uppercase; 
+  border: 12px solid; 
+  padding: 10px 40px; 
+  border-radius: 20px; 
+  z-index: 3;
+}
+
+.watermark-lunas {
+  color: rgba(13, 148, 136, 0.17); /* Ijo */
+  border-color: rgba(13, 148, 136, 0.17);
+}
+
+.watermark-belum {
+  color: rgba(239, 68, 68, 0.17); /* Abang */
+  border-color: rgba(239, 68, 68, 0.17);
+}
 
       @media print {
         body { padding: 0; margin: 1cm; }
@@ -636,7 +671,9 @@ function cetakKwitansi(index) {
     </style>
     </head>
     <body onload="setTimeout(() => window.print(), 500)">
-        <div class="watermark">${sisa <= 0 ? 'LUNAS' : 'PANJER'}</div>
+<div class="watermark ${sisa <= 0 ? 'watermark-lunas' : 'watermark-belum'}">
+  ${sisa <= 0 ? 'LUNAS' : 'BELUM LUNAS'}
+</div>
 
         <div class="kop-container">
             <div class="logo-box">
@@ -645,8 +682,8 @@ function cetakKwitansi(index) {
             <div class="info-box">
                 <h1>${s.namaGroup || 'GROUP KESENIAN'}</h1>
                 <p class="pimpinan">Pimpinan: ${s.namaDalang || '-'}</p>
-                <p>${s.alamat || '-'}</p>
-                <p>WhatsApp: ${s.noHp || '-'} | Email: ${s.email || '-'}</p>
+<p class="alamat-kop">${s.alamat ? s.alamat.replace(/\n/g, '<br>') : '-'}</p>
+                <p>WhatsApp: ${s.noHp || '-'}</p>
             </div>
         </div>
         <div class="double-line"></div>
@@ -662,6 +699,9 @@ function cetakKwitansi(index) {
             <tr><td class="label">Lakon Wayang</td><td class="value" style="color:#0d9488">🎭 ${j.lakon || '-'}</td></tr>
             <tr><td class="label">Waktu Pelaksanaan</td><td class="value">${new Date(j.tanggal).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>
             <tr><td class="label">Lokasi Pentas</td><td class="value">${j.lokasi || '-'}</td></tr>
+                         <tr><td class="label">Rincian</td><td class="value">
+                ${j.paket_isi ? j.paket_isi.replace(/\n/g, '<br>') : '-'}</td></tr>   
+        
         </table>
 
         <div class="rincian-box">
@@ -728,8 +768,6 @@ function renderPaket() {
       }
 
       // 2. Rincian paket lebokno neng LAKON utawa rincian liyane supaya ora ilang
-      const lakonInput = document.getElementById('lakon');
-      lakonInput.value = rincianPaket; 
 
       msg("Paket & Rincian diaktifkan"); 
     } 
@@ -799,32 +837,81 @@ function prosesPelunasan(i) {
 
 // Inisialisasi
 render();
+// ===== SETTING SUARA =====
+let suaraAktif = localStorage.getItem('suaraAktif')!== 'false';
+
 function bunyiKlik() {
-const audioContext = new AudioContext();
-const oscillator = audioContext.createOscillator();
-const gainNode = audioContext.createGain();
+  if (!suaraAktif) return;
 
-oscillator.type = 'square';
-oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
-gainNode.gain.setValueAtTime(0.2, audioContext.currentTime); // Atur volume (0.0 - 1.0)
+  // Fix error AudioContext di Safari
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  const audioContext = new AudioCtx();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
 
-oscillator.connect(gainNode);
-gainNode.connect(audioContext.destination);
+  oscillator.type = 'square';
+  oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+  gainNode.gain.setValueAtTime(0.1, audioContext.currentTime); // Tak cilikne sithik
 
-oscillator.start();
-oscillator.stop(audioContext.currentTime + 0.1);
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + 0.05); // Tak pendekne ben 'klik'
 }
-// KUPING GAIB - KABEH SENG ISO DIKLIK BAKAL MUNI
-document.addEventListener('click', function(e) {
-  // Target e: button, input submit, link, opo ae sing ono onclick
-  const target = e.target.closest('button, input[type="submit"], input[type="button"], a[href], [onclick], [role="button"]');
 
-  if (target) {
-    // Cek ojo sampe tombol disabled isih muni
-    if (target.disabled) return;
+// Kuping Gaib
+document.addEventListener('click', function(e) {
+  const target = e.target.closest('button, input[type="submit"], input[type="button"], a[href], [onclick], [role="button"]');
+  if (target &&!target.disabled &&!target.id.includes('btnSuara')) { // Tombol suara ojo muni
     bunyiKlik();
   }
-}, true); 
+}, true);
+
+// Fungsi Toggle
+function toggleSuara() {
+  suaraAktif =!suaraAktif;
+  localStorage.setItem('suaraAktif', suaraAktif);
+  msg(suaraAktif? 'Suara Dinyalakan 🔊' : 'Suara Dimatikan 🔇');
+  document.getElementById('btnSuara').innerHTML = suaraAktif? '🔊' : '🔇';
+}
+
+
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => {
+          console.log('SW Ndhaptar:', reg);
+
+          // KUPING NGENTENI UPDATE
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            console.log('Ono Service Worker anyar:', newWorker);
+
+            newWorker.addEventListener('statechange', () => {
+              // Nek SW anyar wes di-install & siap ngenteni
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Kene iso gawe toast, ojo confirm ben ra ngganggu
+                // Tapi nek pengen simple, confirm wae
+                if (confirm('Ono update anyar mas bos. Reload sek ben entuk fitur anyar?')) {
+                  newWorker.postMessage({ action: 'skipWaiting' });
+                }
+              }
+            });
+          });
+        })
+        .catch(err => console.log('SW Gagal Ndhaptar:', err));
+
+
+      let refreshing;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        window.location.reload();
+        refreshing = true;
+      });
+    });
+  }
 </script>
 </body>
 </html>
