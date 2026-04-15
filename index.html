@@ -950,13 +950,7 @@ function jedulkeBar() {
 // Pertama load langsung setel
 jedulkeBar();
 
-// BONUS: Umpetke langsung pas keyboard metu
-document.addEventListener('focusin', (e) => {
-  if (e.target.matches('input, textarea')) {
-    clearTimeout(timerNgumpet); // Mateni timer ben ra rebutan
-    umpetkeBar();
-  }
-});
+
 </script>
 </body>
 </html>
