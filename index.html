@@ -16,7 +16,7 @@
 </head>
 <body class="bg-gray-100">
 
-<header class="sticky top-0 z-50 px-4 py-3 no-print">
+<header class="sticky top-0 z-50 px-4 py-3 no-print transition-all duration-300 opacity-100">
   <div class="max-w-5xl mx-auto bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-[24px] px-5 py-4">
     <div class="flex items-center justify-between">
       
@@ -56,7 +56,7 @@
  
 </header>
 
-<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-slate-900/90 backdrop-blur-xl border border-white/10 flex justify-around items-center py-3 px-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)] no-print z-50 rounded-[28px]">
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-4 bg-white/5 backdrop-blur-2xl flex justify-around items-center py-3 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] no-print z-50 rounded- transition-all duration-300 opacity-100">
   
   <button onclick="showPage('dashboard')" class="relative flex flex-col items-center group transition-all duration-300">
     <div class="p-2 rounded-2xl text-emerald-400 bg-emerald-400/10 mb-1 group-active:scale-90 transition-transform">
@@ -912,6 +912,51 @@ function toggleSuara() {
       });
     });
   }
+
+  let navBar = document.querySelector('nav');
+let headerBar = document.querySelector('header');
+let timerNgumpet;
+
+function umpetkeBar() {
+  // NAV MUDUN
+  navBar.style.transform = 'translate(-50%, 150%)';
+  navBar.style.opacity = '0';
+  
+  // HEADER MUNGGAH - ojo lali translateY tok mergo header raono translateX
+  headerBar.style.transform = 'translateY(-100%)';
+  headerBar.style.opacity = '0';
+}
+
+function jedulkeBar() {
+  clearTimeout(timerNgumpet);
+  
+  // NAV BALIK
+  navBar.style.transform = 'translate(-50%, 0%)';
+  navBar.style.opacity = '1';
+  
+  // HEADER BALIK
+  headerBar.style.transform = 'translateY(0%)';
+  headerBar.style.opacity = '1';
+  
+  // Setel timer: 3 detik meneng, umpet maneh
+  timerNgumpet = setTimeout(umpetkeBar, 3000);
+}
+
+// Saben user ndemek layar, reset timer + jedulke
+['touchstart', 'mousemove', 'click', 'scroll'].forEach(evt => {
+  document.addEventListener(evt, jedulkeBar);
+});
+
+// Pertama load langsung setel
+jedulkeBar();
+
+// BONUS: Umpetke langsung pas keyboard metu
+document.addEventListener('focusin', (e) => {
+  if (e.target.matches('input, textarea')) {
+    clearTimeout(timerNgumpet); // Mateni timer ben ra rebutan
+    umpetkeBar();
+  }
+});
 </script>
 </body>
 </html>
